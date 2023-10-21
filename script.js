@@ -35,8 +35,13 @@ function createRoute(map, coordinates) {
 			maxzoom: 14,
 		});
 		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-
+		const pathList = document.getElementById('path-list');
+		const colors = ['salmon', 'lightblue'];
 		coordinates.forEach((trace, index) => {
+			let newItem = pathList.appendChild(document.createElement('li'));
+			newItem.style.backgroundColor = colors[index % colors.length];
+			newItem.classList.add('path-list__item');
+			newItem.innerText = trace.properties.name;
 			const sourceId = `trace-${index}`;
 			map.addSource(sourceId, {
 				type: 'geojson',
@@ -47,7 +52,7 @@ function createRoute(map, coordinates) {
 				source: sourceId,
 				id: `line-${index}`,
 				paint: {
-					'line-color': '#e2725b',
+					'line-color': colors[index],
 					'line-width': 5,
 				},
 				layout: {

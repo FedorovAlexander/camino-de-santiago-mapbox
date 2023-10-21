@@ -1,6 +1,30 @@
 body {
+	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+}
+
+.path-list {
+	position: absolute;
+	top: 0;
+	right: 0;
+	max-height: 300px;
+	max-width: 200px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	background-color: #fff;
+	overflow: scroll;
+}
+
+.path-list__item {
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #eee;
+	}
 }
 
 #map {
