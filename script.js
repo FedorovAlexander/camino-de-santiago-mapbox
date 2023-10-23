@@ -21,11 +21,12 @@ function createMap() {
 			return response.json();
 		})
 		.then((data) => {
-			createRoute(map, data.features);
+			createRoute(map, data.features[1]);
 		});
 }
 
 function createRoute(map, coordinates) {
+	console.log(coordinates);
 	console.log(map, coordinates);
 	map.on('load', () => {
 		map.addSource('mapbox-dem', {
@@ -36,30 +37,29 @@ function createRoute(map, coordinates) {
 		});
 		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
 		const pathList = document.getElementById('path-list');
-		const colors = ['salmon', 'lightblue'];
-		coordinates.forEach((trace, index) => {
-			let newItem = pathList.appendChild(document.createElement('li'));
-			newItem.style.backgroundColor = colors[index % colors.length];
-			newItem.classList.add('path-list__item');
-			newItem.innerText = trace.properties.name;
-			const sourceId = `trace-${index}`;
-			map.addSource(sourceId, {
-				type: 'geojson',
-				data: trace,
-			});
-			map.addLayer({
-				type: 'line',
-				source: sourceId,
-				id: `line-${index}`,
-				paint: {
-					'line-color': colors[index],
-					'line-width': 5,
-				},
-				layout: {
-					'line-cap': 'round',
-					'line-join': 'round',
-				},
-			});
+		const colors = ['#006D75', 'lightblue'];
+
+		let newItem = pathList.appendChild(document.createElement('li'));
+		newItem.style.backgroundColor = colors[0];
+		newItem.classList.add('path-list__item');
+		newItem.innerText = coordinates.properties.name;
+
+		map.addSource('trace', {
+			type: 'geojson',
+			data: coordinates,
+		});
+		map.addLayer({
+			type: 'line',
+			source: 'trace',
+			id: `line`,
+			paint: {
+				'line-color': colors[0],
+				'line-width': 5,
+			},
+			layout: {
+				'line-cap': 'round',
+				'line-join': 'round',
+			},
 		});
 	});
 }
