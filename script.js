@@ -9,7 +9,7 @@ function createMap() {
 		style: 'mapbox://styles/mapbox/satellite-v9',
 		center: [-1.235662, 43.163559],
 		zoom: 14,
-		pitch: 30,
+		pitch: 70,
 		bearing: -160,
 		bearingSnap: true,
 		interactive: true,
@@ -37,6 +37,13 @@ function createRoute(map, data) {
 			maxzoom: 14,
 		});
 		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
+		map.setFog({
+			color: 'rgb(186, 210, 235)', // Lower atmosphere
+			'high-color': 'rgb(36, 92, 223)', // Upper atmosphere
+			'horizon-blend': 0.02, // Atmosphere thickness (default 0.2 at low zooms)
+			'space-color': 'rgb(11, 11, 25)', // Background color
+			'star-intensity': 0.6, // Background star brightness (default 0.35 at low zoooms )
+		});
 		const pathList = document.getElementById('path-list');
 
 		let newItem = pathList.appendChild(document.createElement('li'));
@@ -45,14 +52,8 @@ function createRoute(map, data) {
 		newItem.innerText = data.features[0].properties.name;
 
 		const coordinates = data.features[0].geometry.coordinates;
-		// start by showing just the first coordinate
+		// start by showing just th	e first coordinate
 		data.features[0].geometry.coordinates = [coordinates[0]];
-
-		const speedFactor = 10; // number of frames per longitude degree
-		let animation; // to store and cancel the animation
-		let startTime = 0;
-		let progress = 0; // progress = timestamp - startTime
-		let resetTime = false; // indicator of whether time reset is needed for the animation
 
 		map.addSource('trace', {
 			type: 'geojson',
@@ -73,8 +74,6 @@ function createRoute(map, data) {
 		});
 		startTime = performance.now();
 
-		// map.jumpTo({ center: coordinates[0], zoom: 14 });
-		// map.setPitch(30);
 		document.addEventListener('visibilitychange', () => {
 			resetTime = true;
 		});
@@ -96,67 +95,6 @@ function createRoute(map, data) {
 			}
 		}, 1000);
 	});
-
-	// map.on('load', () => {
-	// 	const animationDuration = 1000000;
-	// 	const cameraAltitude = 3000;
-	// 	console.log(coordinates, 'coordinates');
-	// 	const targetRoute = coordinates.geometry.coordinates;
-	// 	const cameraRoute = coordinates.geometry.coordinates.map((point) => {
-	// 		return [point[0], point[1]];
-	// 	});
-
-	// 	// get the overall distance of each route so we can interpolate along them
-	// 	const routeDistance = turf.lineDistance(turf.lineString(targetRoute));
-	// 	const cameraRouteDistance = turf.lineDistance(turf.lineString(cameraRoute));
-
-	// 	let start;
-
-	// 	function frame(time) {
-	// 		if (!start) start = time;
-	// 		// phase determines how far through the animation we are
-	// 		const phase = (time - start) / animationDuration;
-
-	// 		// phase is normalized between 0 and 1
-	// 		// when the animation is finished, reset start to loop the animation
-	// 		// if (phase > 1) {
-	// 		// 	// wait 1.5 seconds before looping
-	// 		// 	setTimeout(() => {
-	// 		// 		start = 0.0;
-	// 		// 	}, 5000);
-	// 		// }
-
-	// 		// use the phase to get a point that is the appropriate distance along the route
-	// 		// this approach syncs the camera and route positions ensuring they move
-	// 		// at roughly equal rates even if they don't contain the same number of points
-	// 		const alongRoute = turf.along(turf.lineString(targetRoute), routeDistance * phase).geometry.coordinates;
-
-	// 		const alongCamera = turf.along(turf.lineString(cameraRoute), cameraRouteDistance * phase).geometry.coordinates;
-
-	// 		const camera = map.getFreeCameraOptions();
-	// 		console.log(alongCamera, 'alongCamera');
-	// 		// set the position and altitude of the camera
-	// 		camera.position = mapboxgl.MercatorCoordinate.fromLngLat(
-	// 			{
-	// 				lng: alongCamera[0],
-	// 				lat: alongCamera[1],
-	// 			},
-	// 			cameraAltitude
-	// 		);
-
-	// 		// tell the camera to look at a point along the route
-	// 		camera.lookAtPoint({
-	// 			lng: alongRoute[0],
-	// 			lat: alongRoute[1],
-	// 		});
-
-	// 		// map.setFreeCameraOptions(camera);
-
-	// 		// window.requestAnimationFrame(frame);
-	// 	}
-
-	// 	window.requestAnimationFrame(frame);
-	// });
 }
 
 window.onload = createMap;
