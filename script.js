@@ -8,8 +8,8 @@ function createMap() {
 		container: 'map',
 		style: 'mapbox://styles/mapbox/satellite-v9',
 		center: [-1.235662, 43.163559],
-		zoom: 14,
-		pitch: 70,
+		zoom: 5,
+		pitch: 30,
 		bearing: -160,
 		bearingSnap: true,
 		interactive: true,
@@ -27,23 +27,15 @@ function createMap() {
 }
 
 function createRoute(map, data) {
-	// console.log(data);
-	// console.log(map, data);
 	map.on('load', () => {
 		map.addSource('mapbox-dem', {
 			type: 'raster-dem',
 			url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
 			tileSize: 512,
-			maxzoom: 14,
+			maxzoom: 5,
 		});
 		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
-		map.setFog({
-			color: 'rgb(186, 210, 235)', // Lower atmosphere
-			'high-color': 'rgb(36, 92, 223)', // Upper atmosphere
-			'horizon-blend': 0.02, // Atmosphere thickness (default 0.2 at low zooms)
-			'space-color': 'rgb(11, 11, 25)', // Background color
-			'star-intensity': 0.6, // Background star brightness (default 0.35 at low zoooms )
-		});
+		map.setFog({});
 		const pathList = document.getElementById('path-list');
 
 		let newItem = pathList.appendChild(document.createElement('li'));
@@ -72,28 +64,75 @@ function createRoute(map, data) {
 				'line-join': 'round',
 			},
 		});
-		startTime = performance.now();
-
-		document.addEventListener('visibilitychange', () => {
-			resetTime = true;
-		});
 
 		let i = 0;
 		const timer = setInterval(() => {
 			if (i < coordinates.length) {
 				data.features[0].geometry.coordinates.push(coordinates[i]);
 				map.getSource('trace').setData(data);
-				map.flyTo({
-					center: coordinates[i],
-					zoom: 14,
-					speed: 0.1,
-					curve: 1,
-				});
 				i++;
 			} else {
 				window.clearInterval(timer);
 			}
-		}, 1000);
+		}, 250);
+
+		// animate camera
+		const targetRoute = coordinates;
+		const cameraRoute = coordinates;
+		const animationDuration = 6031000 / 4;
+		const cameraAltitude = 5000;
+		// get the overall distance of each route so we can interpolate along them
+		if (targetRoute.length >= 2) {
+			const routeDistance = turf.lineDistance(turf.lineString(targetRoute));
+			const cameraRouteDistance = turf.lineDistance(turf.lineString(cameraRoute));
+
+			let start;
+
+			function frame(time) {
+				if (!start) start = time;
+				// phase determines how far through the animation we are
+				const phase = (time - start) / animationDuration;
+
+				// phase is normalized between 0 and 1
+				// when the animation is finished, reset start to loop the animation
+				if (phase > 1) {
+					// wait 1.5 seconds before looping
+					setTimeout(() => {
+						start = 0.0;
+					}, 1500);
+				}
+
+				// use the phase to get a point that is the appropriate distance along the route
+				// this approach syncs the camera and route positions ensuring they move
+				// at roughly equal rates even if they don't contain the same number of points
+				const alongRoute = turf.along(turf.lineString(targetRoute), routeDistance * phase).geometry.coordinates;
+
+				const alongCamera = turf.along(turf.lineString(cameraRoute), cameraRouteDistance * phase).geometry.coordinates;
+
+				const camera = map.getFreeCameraOptions();
+
+				// set the position and altitude of the camera
+				camera.position = mapboxgl.MercatorCoordinate.fromLngLat(
+					{
+						lng: alongCamera[0],
+						lat: alongCamera[1],
+					},
+					cameraAltitude
+				);
+
+				// tell the camera to look at a point along the route
+				camera.lookAtPoint({
+					lng: alongRoute[0],
+					lat: alongRoute[1],
+				});
+
+				map.setFreeCameraOptions(camera);
+
+				window.requestAnimationFrame(frame);
+			}
+
+			window.requestAnimationFrame(frame);
+		}
 	});
 }
 
