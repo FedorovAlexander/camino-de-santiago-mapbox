@@ -14,9 +14,7 @@ function createMap() {
 		center: [-1.235662, 43.163559],
 		zoom: 5,
 		pitch: 30,
-		bearing: -160,
-		bearingSnap: true,
-		interactive: true,
+		bearing: 0,
 	});
 
 	const url = './data/Camino-de-Santiago.geojson';
@@ -27,6 +25,13 @@ function createMap() {
 		})
 		.then((data) => {
 			createRoute(map, data);
+			setTimeout(() => {
+				console.log('fitBounds');
+				map.fitBounds([
+					[-118.4124705, 34.2363116],
+					[-118.4097024, 34.2335619],
+				]);
+			}, 15000);
 		});
 }
 
@@ -97,7 +102,7 @@ function createRoute(map, data) {
 
 			setTimeout(() => {
 				resolve();
-			}, 1000);
+			}, 14000);
 		});
 	};
 
