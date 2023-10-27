@@ -37,13 +37,15 @@ function createRoute(map) {
 			return response.json();
 		});
 		await playAnimations(trackGeojson).then(() => {
-			const bounds = turf.bbox(trackGeojson);
-			map.fitBounds(bounds, {
-				duration: 10000,
-				pitch: 30,
-				bearing: 0,
-				padding: 120,
-			});
+			setTimeout(() => {
+				const bounds = turf.bbox(trackGeojson);
+				map.fitBounds(bounds, {
+					duration: 10000,
+					pitch: 30,
+					bearing: 0,
+					padding: 120,
+				});
+			}, 1000);
 		});
 		mapboxgl.restoreNow();
 	});
