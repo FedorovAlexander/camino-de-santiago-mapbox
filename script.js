@@ -9,9 +9,9 @@ function createMap() {
 
 	const map = new mapboxgl.Map({
 		container: 'map',
-		style: 'mapbox://styles/mapbox/satellite-v9',
+		style: 'mapbox://styles/alex2240/clo8km0ht00x901qmgx8x8x5y',
 		center: [-1.235662, 43.163559],
-		zoom: 5,
+		zoom: 1.9466794621990684,
 		pitch: 30,
 		bearing: 0,
 	});
@@ -76,18 +76,16 @@ const playAnimations = async (trackGeojson) => {
 		});
 
 		// follow the path while slowly rotating the camera, passing in the camera bearing and altitude from the previous animation
-		await animatePath({
+		const animationResult = await animatePath({
 			map,
-			duration: 20000,
+			duration: 200000,
 			path: trackGeojson.features[0],
 			startBearing: bearing,
 			startAltitude: altitude,
 			pitch: 50,
 		});
 
-		setTimeout(() => {
-			resolve();
-		}, 1000);
+		resolve(animationResult);
 	});
 };
 
