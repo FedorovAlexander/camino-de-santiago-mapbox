@@ -29,9 +29,6 @@ function createRoute(map) {
 		map.setTerrain({ source: 'mapbox-dem', exaggeration: 1.5 });
 		map.setFog({});
 
-		let now = performance.now();
-		mapboxgl.setNow(now);
-
 		const url = './data/Camino-de-Santiago.geojson';
 		const trackGeojson = await fetch(url).then((response) => {
 			return response.json();
@@ -47,7 +44,6 @@ function createRoute(map) {
 				});
 			}, 1000);
 		});
-		mapboxgl.restoreNow();
 	});
 }
 
@@ -68,7 +64,7 @@ const playAnimations = async (trackGeojson) => {
 			targetLngLat,
 			duration: 4000,
 			startAltitude: 3000000,
-			endAltitude: 12000,
+			endAltitude: 7000,
 			startBearing: 0,
 			endBearing: -20,
 			startPitch: 40,
@@ -78,7 +74,7 @@ const playAnimations = async (trackGeojson) => {
 		// follow the path while slowly rotating the camera, passing in the camera bearing and altitude from the previous animation
 		const animationResult = await animatePath({
 			map,
-			duration: 200000,
+			duration: 30000,
 			path: trackGeojson.features[0],
 			startBearing: bearing,
 			startAltitude: altitude,
@@ -109,66 +105,6 @@ const addPathSourceAndLayer = (trackGeojson) => {
 		layout: {
 			'line-cap': 'round',
 			'line-join': 'round',
-		},
-	});
-
-	map.addSource('start-pin-base', {
-		type: 'geojson',
-		data: createGeoJSONCircle(trackGeojson.features[0].geometry.coordinates[0], 0.04),
-	});
-
-	map.addSource('start-pin-top', {
-		type: 'geojson',
-		data: createGeoJSONCircle(trackGeojson.features[0].geometry.coordinates[0], 0.25),
-	});
-
-	map.addSource('end-pin-base', {
-		type: 'geojson',
-		data: createGeoJSONCircle(trackGeojson.features[0].geometry.coordinates.slice(-1)[0], 0.04),
-	});
-
-	map.addSource('end-pin-top', {
-		type: 'geojson',
-		data: createGeoJSONCircle(trackGeojson.features[0].geometry.coordinates.slice(-1)[0], 0.25),
-	});
-
-	map.addLayer({
-		id: 'start-fill-pin-base',
-		type: 'fill-extrusion',
-		source: 'start-pin-base',
-		paint: {
-			'fill-extrusion-color': '#0bfc03',
-			'fill-extrusion-height': 1000,
-		},
-	});
-	map.addLayer({
-		id: 'start-fill-pin-top',
-		type: 'fill-extrusion',
-		source: 'start-pin-top',
-		paint: {
-			'fill-extrusion-color': '#0bfc03',
-			'fill-extrusion-base': 1000,
-			'fill-extrusion-height': 1200,
-		},
-	});
-
-	map.addLayer({
-		id: 'end-fill-pin-base',
-		type: 'fill-extrusion',
-		source: 'end-pin-base',
-		paint: {
-			'fill-extrusion-color': '#eb1c1c',
-			'fill-extrusion-height': 1000,
-		},
-	});
-	map.addLayer({
-		id: 'end-fill-pin-top',
-		type: 'fill-extrusion',
-		source: 'end-pin-top',
-		paint: {
-			'fill-extrusion-color': '#eb1c1c',
-			'fill-extrusion-base': 1000,
-			'fill-extrusion-height': 1200,
 		},
 	});
 };
