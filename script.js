@@ -64,7 +64,7 @@ const playAnimations = async (trackGeojson) => {
 			targetLngLat,
 			duration: 4000,
 			startAltitude: 3000000,
-			endAltitude: 7000,
+			endAltitude: 12000,
 			startBearing: 0,
 			endBearing: -20,
 			startPitch: 40,
@@ -74,7 +74,7 @@ const playAnimations = async (trackGeojson) => {
 		// follow the path while slowly rotating the camera, passing in the camera bearing and altitude from the previous animation
 		const animationResult = await animatePath({
 			map,
-			duration: 30000,
+			duration: 200000,
 			path: trackGeojson.features[0],
 			startBearing: bearing,
 			startAltitude: altitude,
@@ -106,6 +106,127 @@ const addPathSourceAndLayer = (trackGeojson) => {
 			'line-cap': 'round',
 			'line-join': 'round',
 		},
+	});
+
+	//add titles of the cities for the start and end points
+	map.addSource('start-title', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: trackGeojson.features[0].geometry.coordinates[0],
+					},
+					properties: {
+						title: 'Saint-Jean-Pied-de-Port',
+					},
+				},
+			],
+		},
+	});
+
+	map.addSource('end-title', {
+		type: 'geojson',
+		data: {
+			type: 'FeatureCollection',
+			features: [
+				{
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: trackGeojson.features[0].geometry.coordinates.slice(-1)[0],
+					},
+					properties: {
+						title: 'Santiago de Compostela',
+					},
+				},
+			],
+		},
+	});
+
+	map.addLayer({
+		id: 'start-title',
+		type: 'symbol',
+		source: 'start-title',
+		layout: {
+			'text-field': ['get', 'title'],
+			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+			'text-size': 16,
+			'text-anchor': 'bottom',
+		},
+		paint: {
+			'text-color': '#ffffff',
+		},
+	});
+
+	map.addLayer({
+		id: 'end-title',
+		type: 'symbol',
+		source: 'end-title',
+		layout: {
+			'text-field': ['get', 'title'],
+			'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+			'text-size': 16,
+			'text-anchor': 'bottom',
+		},
+		paint: {
+			'text-color': '#ffffff',
+		},
+	});
+
+	const cities = [
+		{ Jaca: [-0.55, 42.57] },
+		{ Pamplona: [-1.65, 42.8167] },
+		{ Logroño: [-2.45, 42.4667] },
+		{ Nájera: [-2.7333, 42.4167] },
+		{ 'Santo Domingo de la Calzada': [-2.9517, 42.4383] },
+		{ Burgos: [-3.6961, 42.3433] },
+		{ Frómista: [-4.2994, 42.2644] },
+		{ León: [-5.5671, 42.5986] },
+		{ Astorga: [-6.0639, 42.4514] },
+		{ Ponferrada: [-6.5872, 42.5467] },
+	];
+
+	//create a title for each city along the route. Cities should be visible at zoom level 8
+	cities.forEach((city) => {
+		const cityName = Object.keys(city)[0];
+		const cityCoordinates = city[cityName];
+		map.addSource(cityName, {
+			type: 'geojson',
+			data: {
+				type: 'FeatureCollection',
+				features: [
+					{
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							coordinates: cityCoordinates,
+						},
+						properties: {
+							title: cityName,
+						},
+					},
+				],
+			},
+		});
+		map.addLayer({
+			id: cityName,
+			type: 'symbol',
+			source: cityName,
+			layout: {
+				'text-field': ['get', 'title'],
+				'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+				'text-size': 18,
+				'text-anchor': 'left',
+			},
+			paint: {
+				'text-color': '#ffffff',
+			},
+			minzoom: 8,
+		});
 	});
 };
 
