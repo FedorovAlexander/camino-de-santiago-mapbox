@@ -13,7 +13,9 @@ const animatePath = ({ map, duration, path, startBearing, startAltitude, pitch }
 				resolve();
 			} else {
 				const alongPath = turf.along(path, pathDistance * animationPhase).geometry.coordinates;
-
+				//add a number to the page showing the distance travelled
+				document.getElementById('distance-traveled').innerHTML = (pathDistance * animationPhase).toFixed(1) + ' km';
+				document.getElementById('distance-last').innerHTML = (pathDistance - pathDistance * animationPhase).toFixed(1) + ' km';
 				const lngLat = {
 					lng: alongPath[0],
 					lat: alongPath[1],

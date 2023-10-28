@@ -12,7 +12,29 @@
 	<body>
 		<div id="map"></div>
 		<div class="info">
-			<h1 class="title" id="title">The Camino Frances</h1>
+			<div class="title-description">
+				<h1 class="title" id="title">The Camino Frances</h1>
+				<p class="description" id="description">The most popular route of the Camino de Santiago.</p>
+			</div>
+
+			<ul class="parameters">
+				<li class="parameters__item">
+					<span class="parameters__item__label">Distance</span>
+					<span class="parameters__item__value" id="distance">770.3 km</span>
+				</li>
+				<li class="parameters__item">
+					<span class="parameters__item__label">Distance traveled</span>
+					<span class="parameters__item__value" id="distance-traveled">0 km</span>
+				</li>
+				<li class="parameters__item">
+					<span class="parameters__item__label">Distance last</span>
+					<span class="parameters__item__value" id="distance-last">0 km</span>
+				</li>
+				<li class="parameters__item" id="next-city">
+					<span class="parameters__item__label">Next city</span>
+					<span class="parameters__item__value">Saint-Jean-Pied-de-Port</span>
+				</li>
+			</ul>
 		</div>
 		<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 		<script src="./d3-ease.min.js" type="text/javascript"></script>
