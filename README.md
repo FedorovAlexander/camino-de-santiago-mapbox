@@ -1,4 +1,4 @@
-# Fly Over Santiago de Camino Path
+# Fly Over Santiago de Camino Route
 
 ![Fly Over Santiago de Camino Path](./data/santiago.gif)
 
