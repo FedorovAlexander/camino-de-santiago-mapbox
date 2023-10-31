@@ -8,6 +8,8 @@ Welcome to the **Fly Over Santiago de Camino Route** project! This repository co
 
 The project is based on this [Mapbox tutorial](https://docs.mapbox.com/mapbox-gl-js/example/live-update-feature/) and this [blog post](https://www.mapbox.com/blog/building-cinematic-route-animations-with-mapboxgl), with additional features and customizations.
 
+The result can be seen on [GitHub Pages](https://fedorovalexander.github.io/camino-de-santiago-mapbox/).
+
 ## Features
 
 - **Flyover Animation**: Experience a virtual flyover of the path, giving you a bird's-eye view.
