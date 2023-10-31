@@ -4,7 +4,7 @@
 
 ## Overview
 
-Welcome to the **Fly Over Santiago de Camino Path** project! This repository contains code and assets for a captivating flyover experience of the Santiago de Camino path using Mapbox. Whether you're a traveler planning your journey, a geospatial enthusiast, or just curious, this project lets you explore the historic Camino path from a unique perspective.
+Welcome to the **Fly Over Santiago de Camino Route** project! This repository contains code and assets for a captivating flyover experience of the Santiago de Camino path using Mapbox. Whether you're a traveler planning your journey, a geospatial enthusiast, or just curious, this project lets you explore the historic Camino path from a unique perspective.
 
 The project is based on this [Mapbox tutorial](https://docs.mapbox.com/mapbox-gl-js/example/live-update-feature/) and this [blog post](https://www.mapbox.com/blog/building-cinematic-route-animations-with-mapboxgl), with additional features and customizations.
 
