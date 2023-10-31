@@ -2,7 +2,7 @@ import flyInAndRotate from './fly-in-and-rotate.js';
 import animatePath from './animate-path.js';
 
 function createMap() {
-	const mapboxkey = 'pk.eyJ1IjoiYWxleDIyNDAiLCJhIjoiY2xvZTA5Znk4MGZrcDJtcndyOGlhMDlmaCJ9.Ar0otrM8oLMDNIY484Jrpw';
+	const mapboxkey = config.mapbox;
 	mapboxgl.accessToken = mapboxkey;
 
 	const map = new mapboxgl.Map({
