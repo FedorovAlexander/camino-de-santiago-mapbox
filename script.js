@@ -1,10 +1,8 @@
 import flyInAndRotate from './fly-in-and-rotate.js';
 import animatePath from './animate-path.js';
-import { createGeoJSONCircle } from './util.js';
 
 function createMap() {
-	const mapboxkey = config.mapbox;
-
+	const mapboxkey = 'pk.eyJ1IjoiYWxleDIyNDAiLCJhIjoiY2xvZTA5Znk4MGZrcDJtcndyOGlhMDlmaCJ9.Ar0otrM8oLMDNIY484Jrpw';
 	mapboxgl.accessToken = mapboxkey;
 
 	const map = new mapboxgl.Map({
